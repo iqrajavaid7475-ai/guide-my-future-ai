@@ -14,7 +14,141 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookmarks: {
+        Row: {
+          created_at: string
+          id: string
+          location: string | null
+          metadata: Json | null
+          opportunity_id: string
+          opportunity_type: string
+          organization: string | null
+          title: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          location?: string | null
+          metadata?: Json | null
+          opportunity_id: string
+          opportunity_type: string
+          organization?: string | null
+          title: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          location?: string | null
+          metadata?: Json | null
+          opportunity_id?: string
+          opportunity_type?: string
+          organization?: string | null
+          title?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      chat_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          career_goal: string | null
+          country: string | null
+          created_at: string
+          education_level: string | null
+          email: string | null
+          field_of_interest: string | null
+          full_name: string | null
+          id: string
+          onboarded: boolean
+          skills: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          career_goal?: string | null
+          country?: string | null
+          created_at?: string
+          education_level?: string | null
+          email?: string | null
+          field_of_interest?: string | null
+          full_name?: string | null
+          id: string
+          onboarded?: boolean
+          skills?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          career_goal?: string | null
+          country?: string | null
+          created_at?: string
+          education_level?: string | null
+          email?: string | null
+          field_of_interest?: string | null
+          full_name?: string | null
+          id?: string
+          onboarded?: boolean
+          skills?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      roadmaps: {
+        Row: {
+          content: Json
+          created_at: string
+          goal: string
+          id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          content: Json
+          created_at?: string
+          goal: string
+          id?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          goal?: string
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
