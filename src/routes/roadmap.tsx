@@ -77,7 +77,7 @@ function RoadmapPage() {
         user_id: user.id,
         title: content.title || "My Roadmap",
         goal: customGoal || profile.career_goal || "Career growth",
-        content: content as unknown as Record<string, unknown>,
+        content: content as never,
       }]).select().single();
       if (error) throw error;
       toast.success("Your roadmap is ready ✨");
