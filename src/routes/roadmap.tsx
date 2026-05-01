@@ -73,12 +73,12 @@ function RoadmapPage() {
         throw new Error(err.error ?? `Error ${res.status}`);
       }
       const content: RoadmapContent = await res.json();
-      const { data, error } = await supabase.from("roadmaps").insert({
+      const { data, error } = await supabase.from("roadmaps").insert([{
         user_id: user.id,
         title: content.title || "My Roadmap",
         goal: customGoal || profile.career_goal || "Career growth",
         content: content as unknown as Record<string, unknown>,
-      }).select().single();
+      }]).select().single();
       if (error) throw error;
       toast.success("Your roadmap is ready ✨");
       setCustomGoal("");
