@@ -1,0 +1,51 @@
+ 🚀 FuturePath AI  
+### Your Future, Guided by AI
+
+## 🏆 Hackathon Project Submission
+
+FuturePath AI is an AI-powered career guidance platform that helps students and young professionals discover scholarships, internships, and career opportunities based on their personal profile.
+
+Built using an AI-assisted development platform, the system provides a complete end-to-end intelligent career planning experience.
+---
+## 🎯 Problem Statement
+Students today face:
+- Lack of proper career guidance  
+- Scattered scholarship information  
+- Difficulty finding relevant opportunities  
+- No personalized roadmap system  
+---
+## 💡 Our Solution
+
+FuturePath AI solves this by:
+- Collecting user profile (skills, interests, education, country)
+- Using AI to analyze user data
+- Generating personalized opportunities
+- Providing career roadmap suggestions
+---
+## 🧠 AI & Platform
+- Built using lovable app
+- AI powered by  Gemini  
+- Intelligent recommendation system  
+- Automated full-stack generation  
+---
+## 🏗️ Tech Stack
+- TypeScript  
+- React 19  
+- Tailwind CSS  
+- Supabase (Auth + Database)  
+- Cloud Backend  
+- AI Integration (Gemini API)  
+---
+## ⚙️ Features
+- AI Career Recommendations  
+- Scholarship Finder  
+- Internship Suggestions  
+- Personalized Dashboard  
+- Roadmap Generator  
+- Secure Authentication  
+---
+## 🚀 Impact
+This project helps students turn confusion into clarity by giving them a structured, AI-powered path toward their future.
+---
+## ⭐ Tagline
+**Your Future, Guided by AI**
