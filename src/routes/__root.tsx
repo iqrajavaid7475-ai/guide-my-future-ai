@@ -70,6 +70,7 @@ function NavBar() {
           <Link to="/opportunities" className="hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }}>Opportunities</Link>
           <Link to="/mentor" className="hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }}>AI Mentor</Link>
           {user && <Link to="/dashboard" className="hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }}>Dashboard</Link>}
+          {user && <Link to="/settings" className="hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }}>Settings</Link>}
         </nav>
         <div className="flex items-center gap-2">
           {user ? (

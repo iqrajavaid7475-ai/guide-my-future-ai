@@ -9,6 +9,7 @@ export interface Profile {
   avatar_url: string | null;
   education_level: string | null;
   field_of_interest: string | null;
+  interests: string[] | null;
   skills: string[] | null;
   career_goal: string | null;
   country: string | null;

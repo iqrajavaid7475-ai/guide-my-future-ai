@@ -26,13 +26,22 @@ function Onboarding() {
   const [name, setName] = useState("");
   const [country, setCountry] = useState("");
   const [education, setEducation] = useState("");
-  const [field, setField] = useState("");
+  const [interests, setInterests] = useState<string[]>([]);
+  const [customInterest, setCustomInterest] = useState("");
   const [skills, setSkills] = useState<string[]>([]);
   const [goal, setGoal] = useState("");
   const [busy, setBusy] = useState(false);
 
   if (!loading && !user) { navigate({ to: "/auth", search: { mode: "signin" } }); return null; }
 
+  const toggleInterest = (s: string) => setInterests((p) => p.includes(s) ? p.filter((x) => x !== s) : [...p, s]);
+  const addCustomInterest = () => {
+    const v = customInterest.trim();
+    if (!v) { toast.error("Type an interest first"); return; }
+    if (interests.some((i) => i.toLowerCase() === v.toLowerCase())) { toast.error("Already added"); return; }
+    setInterests((p) => [...p, v]);
+    setCustomInterest("");
+  };
   const toggleSkill = (s: string) => setSkills((p) => p.includes(s) ? p.filter((x) => x !== s) : [...p, s]);
 
   const submit = async () => {
@@ -40,7 +49,7 @@ function Onboarding() {
     setBusy(true);
     const { error } = await supabase.from("profiles").update({
       full_name: name || null, country, education_level: education,
-      field_of_interest: field, skills, career_goal: goal, onboarded: true,
+      field_of_interest: interests[0] ?? null, interests, skills, career_goal: goal, onboarded: true,
     }).eq("id", user.id);
     setBusy(false);
     if (error) { toast.error(error.message); return; }
@@ -76,18 +85,43 @@ function Onboarding() {
       can: () => !!education,
     },
     {
-      title: "What field excites you?",
-      sub: "We'll match you to opportunities here.",
+      title: "What fields excite you?",
+      sub: "Pick all that apply — or add your own.",
       content: (
-        <div className="grid grid-cols-2 gap-2">
-          {FIELDS.map((f) => (
-            <button key={f} onClick={() => setField(f)} className={`rounded-xl border p-3 text-sm text-left transition-all ${field === f ? "border-primary bg-primary/5 shadow-glow" : "border-border bg-card hover:border-primary/40"}`}>
-              {f}
-            </button>
-          ))}
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-2">
+            {FIELDS.filter((f) => f !== "Other").map((f) => (
+              <button key={f} onClick={() => toggleInterest(f)} className={`rounded-xl border p-3 text-sm text-left transition-all ${interests.includes(f) ? "border-primary bg-primary/5 shadow-glow" : "border-border bg-card hover:border-primary/40"}`}>
+                {f}
+              </button>
+            ))}
+          </div>
+          <div className="rounded-xl border border-dashed border-border bg-card/40 p-3">
+            <label className="text-xs text-muted-foreground font-medium">Other (custom interest)</label>
+            <div className="mt-1.5 flex gap-2">
+              <input
+                value={customInterest}
+                onChange={(e) => setCustomInterest(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addCustomInterest(); } }}
+                placeholder="e.g. Robotics, Sustainability, Cybersecurity"
+                maxLength={40}
+                className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+              <button onClick={addCustomInterest} className="rounded-lg bg-foreground text-background px-3 py-2 text-sm font-medium hover:opacity-90">Add</button>
+            </div>
+          </div>
+          {interests.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {interests.map((i) => (
+                <button key={i} onClick={() => toggleInterest(i)} className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 text-primary border border-primary/30 px-3 py-1 text-xs font-medium hover:bg-primary/20">
+                  {i} <span aria-hidden>×</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       ),
-      can: () => !!field,
+      can: () => interests.length > 0,
     },
     {
       title: "What skills do you have?",

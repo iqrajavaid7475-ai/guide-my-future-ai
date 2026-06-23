@@ -88,6 +88,7 @@ export type Database = {
           field_of_interest: string | null
           full_name: string | null
           id: string
+          interests: string[]
           onboarded: boolean
           skills: string[] | null
           updated_at: string
@@ -102,6 +103,7 @@ export type Database = {
           field_of_interest?: string | null
           full_name?: string | null
           id: string
+          interests?: string[]
           onboarded?: boolean
           skills?: string[] | null
           updated_at?: string
@@ -116,6 +118,7 @@ export type Database = {
           field_of_interest?: string | null
           full_name?: string | null
           id?: string
+          interests?: string[]
           onboarded?: boolean
           skills?: string[] | null
           updated_at?: string
