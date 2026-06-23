@@ -57,36 +57,65 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function NavBar() {
-  const { user, signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
+  const [open, setOpen] = useState(false);
+  const initial = (profile?.full_name || user?.email || "?").trim().charAt(0).toUpperCase();
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/70 border-b border-border/60">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="size-8 rounded-xl bg-hero shadow-glow flex items-center justify-center">
+      <div className="mx-auto max-w-7xl px-4 sm:px-8 h-16 flex items-center justify-between gap-3">
+        <Link to="/" className="flex items-center gap-2 group min-w-0">
+          <div className="size-8 rounded-xl bg-hero shadow-glow flex items-center justify-center shrink-0">
             <Sparkles className="size-4 text-white" />
           </div>
-          <span className="font-display font-semibold text-lg tracking-tight">FuturePath<span className="text-primary">.AI</span></span>
+          <span className="font-display font-semibold text-lg tracking-tight truncate">FuturePath<span className="text-primary">.AI</span></span>
         </Link>
         <nav className="hidden md:flex items-center gap-7 text-sm text-muted-foreground">
           <Link to="/opportunities" className="hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }}>Opportunities</Link>
           <Link to="/mentor" className="hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }}>AI Mentor</Link>
           {user && <Link to="/dashboard" className="hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }}>Dashboard</Link>}
-          {user && <Link to="/settings" className="hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }}>Settings</Link>}
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {user ? (
             <>
-              <Link to="/dashboard" className="hidden sm:inline-flex text-sm px-4 py-2 rounded-full hover:bg-secondary transition-colors">Dashboard</Link>
-              <button onClick={signOut} className="text-sm px-4 py-2 rounded-full bg-foreground text-background hover:opacity-90 transition-opacity">Sign out</button>
+              <Link
+                to="/settings"
+                aria-label="Profile & Settings"
+                title="Profile & Settings"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-card pl-1 pr-3 py-1 hover:border-primary/50 transition-colors"
+              >
+                <span className="size-7 rounded-full bg-hero text-white text-xs font-semibold flex items-center justify-center shadow-glow">{initial}</span>
+                <span className="hidden sm:inline text-xs font-medium">Profile</span>
+              </Link>
+              <button
+                onClick={() => setOpen((v) => !v)}
+                className="md:hidden inline-flex size-9 items-center justify-center rounded-full border border-border hover:bg-secondary"
+                aria-label="Menu"
+              >
+                {open ? <X className="size-4" /> : <Menu className="size-4" />}
+              </button>
+              <button onClick={signOut} className="hidden md:inline-flex text-sm px-4 py-2 rounded-full bg-foreground text-background hover:opacity-90 transition-opacity">Sign out</button>
             </>
           ) : (
             <>
-              <Link to="/auth" search={{ mode: "signin" }} className="text-sm px-4 py-2 rounded-full hover:bg-secondary transition-colors">Sign in</Link>
-              <Link to="/auth" search={{ mode: "signup" }} className="text-sm px-4 py-2 rounded-full bg-foreground text-background hover:opacity-90 transition-opacity shadow-sm">Get started</Link>
+              <Link to="/auth" search={{ mode: "signin" }} className="text-sm px-3 sm:px-4 py-2 rounded-full hover:bg-secondary transition-colors">Sign in</Link>
+              <Link to="/auth" search={{ mode: "signup" }} className="text-sm px-3 sm:px-4 py-2 rounded-full bg-foreground text-background hover:opacity-90 transition-opacity shadow-sm">Get started</Link>
             </>
           )}
         </div>
       </div>
+      {user && open && (
+        <div className="md:hidden border-t border-border/60 bg-background/95 backdrop-blur-xl">
+          <div className="mx-auto max-w-7xl px-4 py-3 flex flex-col text-sm">
+            <Link to="/dashboard" onClick={() => setOpen(false)} className="py-2.5 text-foreground/80 hover:text-foreground">Dashboard</Link>
+            <Link to="/opportunities" onClick={() => setOpen(false)} className="py-2.5 text-foreground/80 hover:text-foreground">Opportunities</Link>
+            <Link to="/mentor" onClick={() => setOpen(false)} className="py-2.5 text-foreground/80 hover:text-foreground">AI Mentor</Link>
+            <Link to="/settings" onClick={() => setOpen(false)} className="py-2.5 text-foreground/80 hover:text-foreground inline-flex items-center gap-2">
+              <UserCircle2 className="size-4" /> Profile & Settings
+            </Link>
+            <button onClick={() => { setOpen(false); signOut(); }} className="mt-2 self-start text-sm px-4 py-2 rounded-full bg-foreground text-background">Sign out</button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
