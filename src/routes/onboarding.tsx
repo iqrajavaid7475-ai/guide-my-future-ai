@@ -26,13 +26,22 @@ function Onboarding() {
   const [name, setName] = useState("");
   const [country, setCountry] = useState("");
   const [education, setEducation] = useState("");
-  const [field, setField] = useState("");
+  const [interests, setInterests] = useState<string[]>([]);
+  const [customInterest, setCustomInterest] = useState("");
   const [skills, setSkills] = useState<string[]>([]);
   const [goal, setGoal] = useState("");
   const [busy, setBusy] = useState(false);
 
   if (!loading && !user) { navigate({ to: "/auth", search: { mode: "signin" } }); return null; }
 
+  const toggleInterest = (s: string) => setInterests((p) => p.includes(s) ? p.filter((x) => x !== s) : [...p, s]);
+  const addCustomInterest = () => {
+    const v = customInterest.trim();
+    if (!v) { toast.error("Type an interest first"); return; }
+    if (interests.some((i) => i.toLowerCase() === v.toLowerCase())) { toast.error("Already added"); return; }
+    setInterests((p) => [...p, v]);
+    setCustomInterest("");
+  };
   const toggleSkill = (s: string) => setSkills((p) => p.includes(s) ? p.filter((x) => x !== s) : [...p, s]);
 
   const submit = async () => {
@@ -40,7 +49,7 @@ function Onboarding() {
     setBusy(true);
     const { error } = await supabase.from("profiles").update({
       full_name: name || null, country, education_level: education,
-      field_of_interest: field, skills, career_goal: goal, onboarded: true,
+      field_of_interest: interests[0] ?? null, interests, skills, career_goal: goal, onboarded: true,
     }).eq("id", user.id);
     setBusy(false);
     if (error) { toast.error(error.message); return; }
