@@ -50,14 +50,19 @@ export const OPPORTUNITIES: Opportunity[] = [
 
 export interface ProfileLike {
   field_of_interest?: string | null;
+  interests?: string[] | null;
   skills?: string[] | null;
   career_goal?: string | null;
 }
 
 export function scoreOpportunity(o: Opportunity, profile: ProfileLike): number {
   let s = 0;
-  const field = (profile.field_of_interest ?? "").toLowerCase();
-  if (field) {
+  const interests = [
+    ...(profile.interests ?? []),
+    ...(profile.field_of_interest ? [profile.field_of_interest] : []),
+  ].map((x) => x.toLowerCase()).filter(Boolean);
+
+  for (const field of interests) {
     if (o.fields.some((f) => f.toLowerCase().includes(field) || field.includes(f.toLowerCase()))) s += 50;
     if (o.title.toLowerCase().includes(field)) s += 20;
     if (o.description.toLowerCase().includes(field)) s += 10;
