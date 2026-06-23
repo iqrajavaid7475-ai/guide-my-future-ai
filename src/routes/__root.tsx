@@ -1,7 +1,8 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { Toaster } from "@/components/ui/sonner";
-import { Sparkles } from "lucide-react";
+import { Sparkles, UserCircle2, Menu, X } from "lucide-react";
+import { useState } from "react";
 
 import appCss from "../styles.css?url";
 
