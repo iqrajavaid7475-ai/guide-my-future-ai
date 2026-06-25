@@ -63,10 +63,17 @@ function RoadmapPage() {
     if (!user || !profile) return;
     setGenerating(true);
     try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
+      if (!accessToken) throw new Error("Please sign in again");
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-mentor`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY },
-        body: JSON.stringify({ mode: "roadmap", profile, goal: customGoal || profile.career_goal }),
+        headers: {
+          "Content-Type": "application/json",
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ mode: "roadmap", goal: customGoal || profile.career_goal }),
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
