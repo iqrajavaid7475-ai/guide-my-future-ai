@@ -97,15 +97,30 @@ Deno.serve(async (req: Request) => {
       const sys = `You are FuturePath AI — a warm, sharp, motivating career & education mentor for students and young professionals. Give concrete, actionable advice. Use short paragraphs, bullet points where useful. Reference the user's profile when relevant. Tone: encouraging, expert, modern.
 
 ${profileSummary}`;
-      // Filter messages to only safe roles to prevent injected system prompts
-      const safeMessages = Array.isArray(messages)
-        ? messages.filter((m: { role?: string; content?: string }) =>
-            (m?.role === "user" || m?.role === "assistant") && typeof m?.content === "string"
+      // Load chat history from DB (do not trust client-supplied history).
+      const { data: history } = await authedClient
+        .from("chat_messages")
+        .select("role,content")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: true })
+        .limit(40);
+      const safeHistory = (history ?? []).filter(
+        (m: { role?: string; content?: string }) =>
+          (m?.role === "user" || m?.role === "assistant") && typeof m?.content === "string"
+      );
+      // Accept only the latest user turn from the request payload.
+      const latest = Array.isArray(messages)
+        ? [...messages].reverse().find(
+            (m: { role?: string; content?: string }) =>
+              m?.role === "user" && typeof m?.content === "string"
           )
-        : [];
+        : null;
+      const convo = latest
+        ? [...safeHistory, { role: "user", content: String(latest.content).slice(0, 4000) }]
+        : safeHistory;
       body = {
         model: "google/gemini-3-flash-preview",
-        messages: [{ role: "system", content: sys }, ...safeMessages],
+        messages: [{ role: "system", content: sys }, ...convo],
         stream: true,
       };
     }
