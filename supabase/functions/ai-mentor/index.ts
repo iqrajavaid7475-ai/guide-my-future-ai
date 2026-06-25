@@ -108,16 +108,8 @@ ${profileSummary}`;
         (m: { role?: string; content?: string }) =>
           (m?.role === "user" || m?.role === "assistant") && typeof m?.content === "string"
       );
-      // Accept only the latest user turn from the request payload.
-      const latest = Array.isArray(messages)
-        ? [...messages].reverse().find(
-            (m: { role?: string; content?: string }) =>
-              m?.role === "user" && typeof m?.content === "string"
-          )
-        : null;
-      const convo = latest
-        ? [...safeHistory, { role: "user", content: String(latest.content).slice(0, 4000) }]
-        : safeHistory;
+      // Client-supplied messages are ignored; latest user turn is already persisted.
+      const convo = safeHistory;
       body = {
         model: "google/gemini-3-flash-preview",
         messages: [{ role: "system", content: sys }, ...convo],
