@@ -1,4 +1,6 @@
 // AI Mentor + Roadmap generator using Lovable AI Gateway
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -18,11 +20,41 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { mode, profile, messages, goal } = await req.json();
+    // --- Authentication ---
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+    const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const authedClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: userData, error: userErr } = await authedClient.auth.getUser();
+    if (userErr || !userData?.user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const user = userData.user;
+
+    const { mode, messages, goal } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("Missing LOVABLE_API_KEY");
 
-    const p: Profile = profile ?? {};
+    // --- Server-fetched profile (no client trust) ---
+    const { data: profileRow } = await authedClient
+      .from("profiles")
+      .select("full_name,education_level,field_of_interest,skills,career_goal,country")
+      .eq("id", user.id)
+      .single();
+    const p: Profile = profileRow ?? {};
+
     const profileSummary = `User profile:
 - Name: ${p.full_name ?? "Unknown"}
 - Country: ${p.country ?? "n/a"}
@@ -52,11 +84,12 @@ Deno.serve(async (req: Request) => {
   "key_opportunities": [{"type": "scholarship"|"internship"|"job"|"course", "title": string, "why": string}]
 }
 4-6 phases. No markdown, no commentary, JSON only.`;
+      const safeGoal = typeof goal === "string" ? goal.slice(0, 500) : "";
       body = {
         model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: sys },
-          { role: "user", content: `${profileSummary}\n\nGoal: ${goal ?? p.career_goal ?? "Build a successful career"}\n\nGenerate the roadmap JSON now.` },
+          { role: "user", content: `${profileSummary}\n\nGoal: ${safeGoal || p.career_goal || "Build a successful career"}\n\nGenerate the roadmap JSON now.` },
         ],
         response_format: { type: "json_object" },
       };
@@ -64,9 +97,15 @@ Deno.serve(async (req: Request) => {
       const sys = `You are FuturePath AI — a warm, sharp, motivating career & education mentor for students and young professionals. Give concrete, actionable advice. Use short paragraphs, bullet points where useful. Reference the user's profile when relevant. Tone: encouraging, expert, modern.
 
 ${profileSummary}`;
+      // Filter messages to only safe roles to prevent injected system prompts
+      const safeMessages = Array.isArray(messages)
+        ? messages.filter((m: { role?: string; content?: string }) =>
+            (m?.role === "user" || m?.role === "assistant") && typeof m?.content === "string"
+          )
+        : [];
       body = {
         model: "google/gemini-3-flash-preview",
-        messages: [{ role: "system", content: sys }, ...(messages ?? [])],
+        messages: [{ role: "system", content: sys }, ...safeMessages],
         stream: true,
       };
     }
