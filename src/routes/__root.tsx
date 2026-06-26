@@ -74,8 +74,14 @@ function NavBar() {
   const hash = useRouterState({ select: (s) => s.location.hash });
   const initial = (profile?.full_name || user?.email || "?").trim().charAt(0).toUpperCase();
   // First-match wins so only one item is highlighted at a time.
-  const activeIdx = MENU.findIndex((m) => path === m.to && (m.hash ? hash === m.hash : !hash || hash === "profile" || hash === "preferences" ? hash === m.hash : true));
-  const fallbackIdx = activeIdx === -1 ? MENU.findIndex((m) => path === m.to) : activeIdx;
+  const currentHash = (hash || "").replace(/^#/, "");
+  const activeIdx = (() => {
+    // Try hash-specific match first.
+    const exact = MENU.findIndex((m) => path === m.to && m.hash && m.hash === currentHash);
+    if (exact !== -1) return exact;
+    // Otherwise first item that matches the pathname.
+    return MENU.findIndex((m) => path === m.to);
+  })();
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/70 border-b border-border/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-8 h-16 flex items-center justify-between gap-3">
