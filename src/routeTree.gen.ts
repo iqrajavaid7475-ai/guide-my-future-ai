@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SavedOpportunitiesRouteImport } from './routes/saved-opportunities'
 import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as OpportunitiesRouteImport } from './routes/opportunities'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
@@ -21,6 +22,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SavedOpportunitiesRoute = SavedOpportunitiesRouteImport.update({
+  id: '/saved-opportunities',
+  path: '/saved-opportunities',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RoadmapRoute = RoadmapRouteImport.update({
@@ -67,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/opportunities': typeof OpportunitiesRoute
   '/roadmap': typeof RoadmapRoute
+  '/saved-opportunities': typeof SavedOpportunitiesRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRoutesByTo {
@@ -77,6 +84,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/opportunities': typeof OpportunitiesRoute
   '/roadmap': typeof RoadmapRoute
+  '/saved-opportunities': typeof SavedOpportunitiesRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRoutesById {
@@ -88,6 +96,7 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/opportunities': typeof OpportunitiesRoute
   '/roadmap': typeof RoadmapRoute
+  '/saved-opportunities': typeof SavedOpportunitiesRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRouteTypes {
@@ -100,6 +109,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/opportunities'
     | '/roadmap'
+    | '/saved-opportunities'
     | '/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/opportunities'
     | '/roadmap'
+    | '/saved-opportunities'
     | '/settings'
   id:
     | '__root__'
@@ -120,6 +131,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/opportunities'
     | '/roadmap'
+    | '/saved-opportunities'
     | '/settings'
   fileRoutesById: FileRoutesById
 }
@@ -131,6 +143,7 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   OpportunitiesRoute: typeof OpportunitiesRoute
   RoadmapRoute: typeof RoadmapRoute
+  SavedOpportunitiesRoute: typeof SavedOpportunitiesRoute
   SettingsRoute: typeof SettingsRoute
 }
 
@@ -141,6 +154,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/saved-opportunities': {
+      id: '/saved-opportunities'
+      path: '/saved-opportunities'
+      fullPath: '/saved-opportunities'
+      preLoaderRoute: typeof SavedOpportunitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/roadmap': {
@@ -203,17 +223,9 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   OpportunitiesRoute: OpportunitiesRoute,
   RoadmapRoute: RoadmapRoute,
+  SavedOpportunitiesRoute: SavedOpportunitiesRoute,
   SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
