@@ -1,8 +1,19 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { Toaster } from "@/components/ui/sonner";
-import { Sparkles, UserCircle2, Menu, X } from "lucide-react";
+import { Sparkles, UserCircle2, Menu, X, LayoutDashboard, Map, Compass, MessageCircle, Bookmark, Settings as SettingsIcon, LogOut } from "lucide-react";
 import { useState } from "react";
+
+const MENU = [
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/roadmap", label: "AI Roadmap Generator", icon: Sparkles },
+  { to: "/opportunities", label: "Opportunities", icon: Compass },
+  { to: "/mentor", label: "AI Mentor", icon: MessageCircle },
+  { to: "/saved-opportunities", label: "Saved Opportunities", icon: Bookmark },
+  { to: "/saved-roadmaps", label: "Saved Roadmaps", icon: Map },
+  { to: "/settings", label: "Edit Profile", icon: UserCircle2 },
+  { to: "/settings", label: "Settings", icon: SettingsIcon },
+] as const;
 
 import appCss from "../styles.css?url";
 
