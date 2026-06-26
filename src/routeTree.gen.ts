@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SavedRoadmapsRouteImport } from './routes/saved-roadmaps'
+import { Route as SavedOpportunitiesRouteImport } from './routes/saved-opportunities'
 import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as OpportunitiesRouteImport } from './routes/opportunities'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
@@ -21,6 +23,16 @@ import { Route as IndexRouteImport } from './routes/index'
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SavedRoadmapsRoute = SavedRoadmapsRouteImport.update({
+  id: '/saved-roadmaps',
+  path: '/saved-roadmaps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SavedOpportunitiesRoute = SavedOpportunitiesRouteImport.update({
+  id: '/saved-opportunities',
+  path: '/saved-opportunities',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RoadmapRoute = RoadmapRouteImport.update({
@@ -67,6 +79,8 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/opportunities': typeof OpportunitiesRoute
   '/roadmap': typeof RoadmapRoute
+  '/saved-opportunities': typeof SavedOpportunitiesRoute
+  '/saved-roadmaps': typeof SavedRoadmapsRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRoutesByTo {
@@ -77,6 +91,8 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/opportunities': typeof OpportunitiesRoute
   '/roadmap': typeof RoadmapRoute
+  '/saved-opportunities': typeof SavedOpportunitiesRoute
+  '/saved-roadmaps': typeof SavedRoadmapsRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRoutesById {
@@ -88,6 +104,8 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/opportunities': typeof OpportunitiesRoute
   '/roadmap': typeof RoadmapRoute
+  '/saved-opportunities': typeof SavedOpportunitiesRoute
+  '/saved-roadmaps': typeof SavedRoadmapsRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRouteTypes {
@@ -100,6 +118,8 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/opportunities'
     | '/roadmap'
+    | '/saved-opportunities'
+    | '/saved-roadmaps'
     | '/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -110,6 +130,8 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/opportunities'
     | '/roadmap'
+    | '/saved-opportunities'
+    | '/saved-roadmaps'
     | '/settings'
   id:
     | '__root__'
@@ -120,6 +142,8 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/opportunities'
     | '/roadmap'
+    | '/saved-opportunities'
+    | '/saved-roadmaps'
     | '/settings'
   fileRoutesById: FileRoutesById
 }
@@ -131,6 +155,8 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   OpportunitiesRoute: typeof OpportunitiesRoute
   RoadmapRoute: typeof RoadmapRoute
+  SavedOpportunitiesRoute: typeof SavedOpportunitiesRoute
+  SavedRoadmapsRoute: typeof SavedRoadmapsRoute
   SettingsRoute: typeof SettingsRoute
 }
 
@@ -141,6 +167,20 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/saved-roadmaps': {
+      id: '/saved-roadmaps'
+      path: '/saved-roadmaps'
+      fullPath: '/saved-roadmaps'
+      preLoaderRoute: typeof SavedRoadmapsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/saved-opportunities': {
+      id: '/saved-opportunities'
+      path: '/saved-opportunities'
+      fullPath: '/saved-opportunities'
+      preLoaderRoute: typeof SavedOpportunitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/roadmap': {
@@ -203,6 +243,8 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   OpportunitiesRoute: OpportunitiesRoute,
   RoadmapRoute: RoadmapRoute,
+  SavedOpportunitiesRoute: SavedOpportunitiesRoute,
+  SavedRoadmapsRoute: SavedRoadmapsRoute,
   SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport

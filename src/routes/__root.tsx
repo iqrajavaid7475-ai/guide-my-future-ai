@@ -1,8 +1,19 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { Toaster } from "@/components/ui/sonner";
-import { Sparkles, UserCircle2, Menu, X } from "lucide-react";
+import { Sparkles, UserCircle2, Menu, X, LayoutDashboard, Map, Compass, MessageCircle, Bookmark, Settings as SettingsIcon, LogOut } from "lucide-react";
 import { useState } from "react";
+
+const MENU = [
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/roadmap", label: "AI Roadmap Generator", icon: Sparkles },
+  { to: "/opportunities", label: "Opportunities", icon: Compass },
+  { to: "/mentor", label: "AI Mentor", icon: MessageCircle },
+  { to: "/saved-opportunities", label: "Saved Opportunities", icon: Bookmark },
+  { to: "/saved-roadmaps", label: "Saved Roadmaps", icon: Map },
+  { to: "/settings", label: "Edit Profile", icon: UserCircle2 },
+  { to: "/settings", label: "Settings", icon: SettingsIcon },
+] as const;
 
 import appCss from "../styles.css?url";
 
@@ -59,6 +70,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function NavBar() {
   const { user, profile, signOut } = useAuth();
   const [open, setOpen] = useState(false);
+  const path = useRouterState({ select: (s) => s.location.pathname });
   const initial = (profile?.full_name || user?.email || "?").trim().charAt(0).toUpperCase();
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/70 border-b border-border/60">
@@ -88,12 +100,12 @@ function NavBar() {
               </Link>
               <button
                 onClick={() => setOpen((v) => !v)}
-                className="md:hidden inline-flex size-9 items-center justify-center rounded-full border border-border hover:bg-secondary"
+                className="inline-flex size-9 items-center justify-center rounded-full border border-border hover:bg-secondary"
                 aria-label="Menu"
+                aria-expanded={open}
               >
                 {open ? <X className="size-4" /> : <Menu className="size-4" />}
               </button>
-              <button onClick={signOut} className="hidden md:inline-flex text-sm px-4 py-2 rounded-full bg-foreground text-background hover:opacity-90 transition-opacity">Sign out</button>
             </>
           ) : (
             <>
@@ -104,17 +116,36 @@ function NavBar() {
         </div>
       </div>
       {user && open && (
-        <div className="md:hidden border-t border-border/60 bg-background/95 backdrop-blur-xl">
-          <div className="mx-auto max-w-7xl px-4 py-3 flex flex-col text-sm">
-            <Link to="/dashboard" onClick={() => setOpen(false)} className="py-2.5 text-foreground/80 hover:text-foreground">Dashboard</Link>
-            <Link to="/opportunities" onClick={() => setOpen(false)} className="py-2.5 text-foreground/80 hover:text-foreground">Opportunities</Link>
-            <Link to="/mentor" onClick={() => setOpen(false)} className="py-2.5 text-foreground/80 hover:text-foreground">AI Mentor</Link>
-            <Link to="/settings" onClick={() => setOpen(false)} className="py-2.5 text-foreground/80 hover:text-foreground inline-flex items-center gap-2">
-              <UserCircle2 className="size-4" /> Profile & Settings
-            </Link>
-            <button onClick={() => { setOpen(false); signOut(); }} className="mt-2 self-start text-sm px-4 py-2 rounded-full bg-foreground text-background">Sign out</button>
+        <>
+          <div className="fixed inset-0 top-16 z-30 bg-black/30 backdrop-blur-sm" onClick={() => setOpen(false)} />
+          <div className="absolute right-2 sm:right-4 top-[calc(100%+8px)] z-40 w-[min(92vw,320px)] rounded-2xl border border-border bg-card shadow-elevated overflow-hidden">
+            <div className="p-3 flex flex-col">
+              {MENU.map((item) => {
+                const Icon = item.icon;
+                const active = path === item.to || path.startsWith(item.to + "/");
+                return (
+                  <Link
+                    key={item.label}
+                    to={item.to}
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${active ? "bg-primary/10 text-primary font-medium" : "text-foreground/80 hover:bg-secondary hover:text-foreground"}`}
+                  >
+                    <Icon className={`size-4 ${active ? "text-primary" : "text-muted-foreground"}`} />
+                    <span className="truncate">{item.label}</span>
+                  </Link>
+                );
+              })}
+              <div className="my-2 h-px bg-border" />
+              <button
+                onClick={() => { setOpen(false); signOut(); }}
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground/80 hover:bg-secondary hover:text-destructive transition-colors"
+              >
+                <LogOut className="size-4 text-muted-foreground" />
+                Sign out
+              </button>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );
