@@ -130,14 +130,16 @@ function NavBar() {
           <div className="fixed inset-0 top-16 z-30 bg-black/30 backdrop-blur-sm" onClick={() => setOpen(false)} />
           <div className="absolute right-2 sm:right-4 top-[calc(100%+8px)] z-40 w-[min(92vw,320px)] rounded-2xl border border-border bg-card shadow-elevated overflow-hidden">
             <div className="p-3 flex flex-col">
-              {MENU.map((item) => {
+              {MENU.map((item, idx) => {
                 const Icon = item.icon;
-                const active = path === item.to || path.startsWith(item.to + "/");
+                const active = idx === activeIdx;
                 return (
                   <Link
                     key={item.label}
                     to={item.to}
+                    hash={item.hash || undefined}
                     onClick={() => setOpen(false)}
+                    aria-current={active ? "page" : undefined}
                     className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${active ? "bg-primary/10 text-primary font-medium" : "text-foreground/80 hover:bg-secondary hover:text-foreground"}`}
                   >
                     <Icon className={`size-4 ${active ? "text-primary" : "text-muted-foreground"}`} />
