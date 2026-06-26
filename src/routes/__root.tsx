@@ -5,14 +5,14 @@ import { Sparkles, UserCircle2, Menu, X, LayoutDashboard, Map, Compass, MessageC
 import { useState } from "react";
 
 const MENU = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/roadmap", label: "AI Roadmap Generator", icon: Sparkles },
-  { to: "/opportunities", label: "Opportunities", icon: Compass },
-  { to: "/mentor", label: "AI Mentor", icon: MessageCircle },
-  { to: "/saved-opportunities", label: "Saved Opportunities", icon: Bookmark },
-  { to: "/saved-roadmaps", label: "Saved Roadmaps", icon: Map },
-  { to: "/settings", label: "Edit Profile", icon: UserCircle2 },
-  { to: "/settings", label: "Settings", icon: SettingsIcon },
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, hash: "" },
+  { to: "/roadmap", label: "AI Roadmap Generator", icon: Sparkles, hash: "" },
+  { to: "/opportunities", label: "Opportunities", icon: Compass, hash: "" },
+  { to: "/mentor", label: "AI Mentor", icon: MessageCircle, hash: "" },
+  { to: "/saved-opportunities", label: "Saved Opportunities", icon: Bookmark, hash: "" },
+  { to: "/saved-roadmaps", label: "Saved Roadmaps", icon: Map, hash: "" },
+  { to: "/settings", label: "Edit Profile", icon: UserCircle2, hash: "profile" },
+  { to: "/settings", label: "Settings", icon: SettingsIcon, hash: "preferences" },
 ] as const;
 
 import appCss from "../styles.css?url";
