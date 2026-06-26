@@ -122,7 +122,7 @@ function NavBar() {
             <div className="p-3 flex flex-col">
               {MENU.map((item) => {
                 const Icon = item.icon;
-                const active = path === item.to || (item.to !== "/" && path.startsWith(item.to));
+                const active = path === item.to || path.startsWith(item.to + "/");
                 return (
                   <Link
                     key={item.label}
