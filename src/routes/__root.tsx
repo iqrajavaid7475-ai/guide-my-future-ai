@@ -92,9 +92,9 @@ function NavBar() {
           <span className="font-display font-semibold text-lg tracking-tight truncate">FuturePath<span className="text-primary">.AI</span></span>
         </Link>
         <nav className="hidden md:flex items-center gap-7 text-sm text-muted-foreground">
-          <Link to="/opportunities" className="hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }}>Opportunities</Link>
-          <Link to="/mentor" className="hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }}>AI Mentor</Link>
-          {user && <Link to="/dashboard" className="hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }}>Dashboard</Link>}
+          <Link to="/opportunities" className="hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>Opportunities</Link>
+          <Link to="/mentor" className="hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>AI Mentor</Link>
+          {user && <Link to="/dashboard" className="hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>Dashboard</Link>}
         </nav>
         <div className="flex items-center gap-2 shrink-0">
           {user ? (
