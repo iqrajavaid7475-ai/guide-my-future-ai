@@ -5,14 +5,14 @@ import { Sparkles, UserCircle2, Menu, X, LayoutDashboard, Map, Compass, MessageC
 import { useState } from "react";
 
 const MENU = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/roadmap", label: "AI Roadmap Generator", icon: Sparkles },
-  { to: "/opportunities", label: "Opportunities", icon: Compass },
-  { to: "/mentor", label: "AI Mentor", icon: MessageCircle },
-  { to: "/saved-opportunities", label: "Saved Opportunities", icon: Bookmark },
-  { to: "/saved-roadmaps", label: "Saved Roadmaps", icon: Map },
-  { to: "/settings", label: "Edit Profile", icon: UserCircle2 },
-  { to: "/settings", label: "Settings", icon: SettingsIcon },
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, hash: "" },
+  { to: "/roadmap", label: "AI Roadmap Generator", icon: Sparkles, hash: "" },
+  { to: "/opportunities", label: "Opportunities", icon: Compass, hash: "" },
+  { to: "/mentor", label: "AI Mentor", icon: MessageCircle, hash: "" },
+  { to: "/saved-opportunities", label: "Saved Opportunities", icon: Bookmark, hash: "" },
+  { to: "/saved-roadmaps", label: "Saved Roadmaps", icon: Map, hash: "" },
+  { to: "/settings", label: "Edit Profile", icon: UserCircle2, hash: "profile" },
+  { to: "/settings", label: "Settings", icon: SettingsIcon, hash: "preferences" },
 ] as const;
 
 import appCss from "../styles.css?url";
@@ -71,7 +71,17 @@ function NavBar() {
   const { user, profile, signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const hash = useRouterState({ select: (s) => s.location.hash });
   const initial = (profile?.full_name || user?.email || "?").trim().charAt(0).toUpperCase();
+  // First-match wins so only one item is highlighted at a time.
+  const currentHash = (hash || "").replace(/^#/, "");
+  const activeIdx = (() => {
+    // Try hash-specific match first.
+    const exact = MENU.findIndex((m) => path === m.to && m.hash && m.hash === currentHash);
+    if (exact !== -1) return exact;
+    // Otherwise first item that matches the pathname.
+    return MENU.findIndex((m) => path === m.to);
+  })();
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/70 border-b border-border/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-8 h-16 flex items-center justify-between gap-3">
@@ -82,9 +92,9 @@ function NavBar() {
           <span className="font-display font-semibold text-lg tracking-tight truncate">FuturePath<span className="text-primary">.AI</span></span>
         </Link>
         <nav className="hidden md:flex items-center gap-7 text-sm text-muted-foreground">
-          <Link to="/opportunities" className="hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }}>Opportunities</Link>
-          <Link to="/mentor" className="hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }}>AI Mentor</Link>
-          {user && <Link to="/dashboard" className="hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }}>Dashboard</Link>}
+          <Link to="/opportunities" className="hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>Opportunities</Link>
+          <Link to="/mentor" className="hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>AI Mentor</Link>
+          {user && <Link to="/dashboard" className="hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>Dashboard</Link>}
         </nav>
         <div className="flex items-center gap-2 shrink-0">
           {user ? (
@@ -120,14 +130,16 @@ function NavBar() {
           <div className="fixed inset-0 top-16 z-30 bg-black/30 backdrop-blur-sm" onClick={() => setOpen(false)} />
           <div className="absolute right-2 sm:right-4 top-[calc(100%+8px)] z-40 w-[min(92vw,320px)] rounded-2xl border border-border bg-card shadow-elevated overflow-hidden">
             <div className="p-3 flex flex-col">
-              {MENU.map((item) => {
+              {MENU.map((item, idx) => {
                 const Icon = item.icon;
-                const active = path === item.to || path.startsWith(item.to + "/");
+                const active = idx === activeIdx;
                 return (
                   <Link
                     key={item.label}
                     to={item.to}
+                    hash={item.hash || undefined}
                     onClick={() => setOpen(false)}
+                    aria-current={active ? "page" : undefined}
                     className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${active ? "bg-primary/10 text-primary font-medium" : "text-foreground/80 hover:bg-secondary hover:text-foreground"}`}
                   >
                     <Icon className={`size-4 ${active ? "text-primary" : "text-muted-foreground"}`} />
