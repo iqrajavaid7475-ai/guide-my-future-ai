@@ -96,7 +96,7 @@ function NavBar() {
             <Compass className="size-4" /> Opportunities
           </Link>
           <Link to="/roadmap" className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>
-            <Map className="size-4" /> AI Roadmap
+            <MapIcon className="size-4" /> AI Roadmap
           </Link>
           <Link to="/mentor" className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>
             <MessageCircle className="size-4" /> AI Mentor
