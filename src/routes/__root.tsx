@@ -1,7 +1,7 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { Toaster } from "@/components/ui/sonner";
-import { Sparkles, UserCircle2, Menu, X, LayoutDashboard, Map, Compass, MessageCircle, Bookmark, Settings as SettingsIcon, LogOut } from "lucide-react";
+import { Sparkles, UserCircle2, Menu, X, LayoutDashboard, Map as MapIcon, Compass, MessageCircle, Bookmark, Settings as SettingsIcon, LogOut } from "lucide-react";
 import { useState } from "react";
 
 const MENU = [
