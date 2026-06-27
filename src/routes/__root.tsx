@@ -10,7 +10,7 @@ const MENU = [
   { to: "/opportunities", label: "Opportunities", icon: Compass, hash: "" },
   { to: "/mentor", label: "AI Mentor", icon: MessageCircle, hash: "" },
   { to: "/saved-opportunities", label: "Saved Opportunities", icon: Bookmark, hash: "" },
-  { to: "/saved-roadmaps", label: "Saved Roadmaps", icon: Map, hash: "" },
+  { to: "/saved-roadmaps", label: "Saved Roadmaps", icon: MapIcon, hash: "" },
   { to: "/settings", label: "Edit Profile", icon: UserCircle2, hash: "profile" },
   { to: "/settings", label: "Settings", icon: SettingsIcon, hash: "preferences" },
 ] as const;
