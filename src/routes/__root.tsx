@@ -1,7 +1,7 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { Toaster } from "@/components/ui/sonner";
-import { Sparkles, UserCircle2, Menu, X, LayoutDashboard, Map, Compass, MessageCircle, Bookmark, Settings as SettingsIcon, LogOut } from "lucide-react";
+import { Sparkles, UserCircle2, Menu, X, LayoutDashboard, Map as MapIcon, Compass, MessageCircle, Bookmark, Settings as SettingsIcon, LogOut } from "lucide-react";
 import { useState } from "react";
 
 const MENU = [
@@ -10,7 +10,7 @@ const MENU = [
   { to: "/opportunities", label: "Opportunities", icon: Compass, hash: "" },
   { to: "/mentor", label: "AI Mentor", icon: MessageCircle, hash: "" },
   { to: "/saved-opportunities", label: "Saved Opportunities", icon: Bookmark, hash: "" },
-  { to: "/saved-roadmaps", label: "Saved Roadmaps", icon: Map, hash: "" },
+  { to: "/saved-roadmaps", label: "Saved Roadmaps", icon: MapIcon, hash: "" },
   { to: "/settings", label: "Edit Profile", icon: UserCircle2, hash: "profile" },
   { to: "/settings", label: "Settings", icon: SettingsIcon, hash: "preferences" },
 ] as const;
@@ -96,7 +96,7 @@ function NavBar() {
             <Compass className="size-4" /> Opportunities
           </Link>
           <Link to="/roadmap" className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>
-            <Map className="size-4" /> AI Roadmap
+            <MapIcon className="size-4" /> AI Roadmap
           </Link>
           <Link to="/mentor" className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>
             <MessageCircle className="size-4" /> AI Mentor
