@@ -91,10 +91,21 @@ function NavBar() {
           </div>
           <span className="font-display font-semibold text-lg tracking-tight truncate">FuturePath<span className="text-primary">.AI</span></span>
         </Link>
-        <nav className="hidden md:flex items-center gap-7 text-sm text-muted-foreground">
-          <Link to="/opportunities" className="hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>Opportunities</Link>
-          <Link to="/mentor" className="hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>AI Mentor</Link>
-          {user && <Link to="/dashboard" className="hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>Dashboard</Link>}
+        <nav className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
+          <Link to="/opportunities" className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>
+            <Compass className="size-4" /> Opportunities
+          </Link>
+          <Link to="/roadmap" className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>
+            <Map className="size-4" /> AI Roadmap
+          </Link>
+          <Link to="/mentor" className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>
+            <MessageCircle className="size-4" /> AI Mentor
+          </Link>
+          {user && (
+            <Link to="/dashboard" className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors" activeOptions={{ exact: true }} activeProps={{ className: "text-foreground font-medium" }}>
+              <LayoutDashboard className="size-4" /> Dashboard
+            </Link>
+          )}
         </nav>
         <div className="flex items-center gap-2 shrink-0">
           {user ? (
